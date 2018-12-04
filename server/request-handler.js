@@ -35,11 +35,17 @@ var routes = {
   '/classes/messages': true
 };
 
-exports.requestHandler = function(request, response) {
+var dataObj = {
+  results: []
+};
+
+var requestHandler = function(request, response) {
   // var urlParts = url.parse(request.url);
   var parts = url.parse(request.url);
-  console.log('Request', request);
-  console.log('parts', parts, routes);
+  debugger;
+  // console.log('Request', request);
+  // console.log('parts', parts, routes);
+  console.log('Response_1: ',response);
   var route = routes[parts.pathname];
   if (route) {
   // Request and Response come from node's http module.
@@ -56,11 +62,18 @@ exports.requestHandler = function(request, response) {
     // Adding more logging to your server can be an easy way to get passive
     // debugging help, but you should always be careful about leaving stray
     // console.logs in your code.
+    // console.log('Serving request type ' + request.method + ' for url ' + request.url);
     console.log('Serving request type ' + request.method + ' for url ' + request.url);
-
+    
     // The outgoing status.
-    var statusCode = 200;
-
+    if (request.method === 'GET') {
+      var statusCode = 200; 
+      var returnData = JSON.stringify(dataObj);     
+    } else if(request.method === 'POST'){
+      var statusCode = 201;
+      dataObj.results.push(request._postData);
+      var returnData = JSON.stringify({"results":[]});
+    }
     // See the note below about CORS headers.
     var headers = defaultCorsHeaders;
 
@@ -81,7 +94,15 @@ exports.requestHandler = function(request, response) {
     //
     // Calling .end "flushes" the response's internal buffer, forcing
     // node to actually send all the data over to the client.
-    response.end('Hello, World!');
+
+    response.end(returnData);
+    console.log('Response_2: ',response);
+  } 
+  else{
+    var headers = defaultCorsHeaders;
+    response.writeHead(404, headers);
+    response.end('ERROR');
   }
-//else throw error
 };
+
+exports.requestHandler = requestHandler;
