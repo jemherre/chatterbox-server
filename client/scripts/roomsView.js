@@ -9,13 +9,13 @@ var RoomsView = {
     $("#currentRoom").on('change',RoomsView.selectRoom);
     RoomsView.renderRoom(RoomsView.selectedRoom); //create main(intial) room
     //we will also have to render all rooms that are availuable in our server to be option :(
-    
+
     //load all message pertaining to our main room
     $(document).ready(function() {
       RoomsView.pullAllRooms();
       RoomsView.selectRoom();
     });
-    
+
   },
 
   //create template for select - options
@@ -27,13 +27,13 @@ var RoomsView = {
 
   //generates/displays rooms when clicked
   renderRoom: function(name) {
-    if(Rooms[name] === undefined && name != undefined){ //only create option room if it doesn't exist
+    if(Rooms[name] === undefined && name !== undefined){ //only create option room if it doesn't exist
       Rooms[name]= name;
       var html = RoomsView.render({'roomName': name});
-      $(document).ready(function() { 
+      $(document).ready(function() {
         RoomsView.$select.append(html);
         // Create the event handler for highlighted option
-      });  
+      });
     }
   },
 
@@ -48,35 +48,35 @@ var RoomsView = {
     //maybe hide other form and make it re-appear after getting name
     $(document).ready(function(){
       //hide message form
-     FormView.$form.css('display','none');
+      FormView.$form.css('display','none');
       $('#rooms').append(popUpForm);
       //create handler for when submiting new room name
       $('#getName button').on('click',RoomsView.enterRoomName);
       //create handler upon selecting room
-    })
+    });
 
   },
 
   enterRoomName: function(event){
     event.preventDefault();// do we need this??
     //access and save name into render room
-   var newRoom = $('#getName').find('input[type=text]').val();
-   console.log("NEW Room>>>",newRoom);
-   RoomsView.renderRoom(newRoom);
+    var newRoom = $('#getName').find('input[type=text]').val();
+    console.log("NEW Room>>>",newRoom);
+    RoomsView.renderRoom(newRoom);
     //remove form room tag and display message form
     $(document).ready(function(){
       $("#getName").remove();
       FormView.$form.css('display','block');
     });
-   
+
   },
 
   selectRoom: function() {
     //capture selected tag value
     var selectTag = document.getElementById("currentRoom");
     // debugger;
-    console.log("SELECT>> ",selectTag);
-    //option tag keeps track of highlight(selected) option 
+    // console.log("SELECT>> ",selectTag);
+    //option tag keeps track of highlight(selected) option
     RoomsView.selectedRoom = (selectTag.options[selectTag.selectedIndex].value).toString();
 
     //pull all messages from parse server with roomName
@@ -88,15 +88,15 @@ var RoomsView = {
         html += MessageView.render(data['results'][i]);
       }
       //append the DOM with those messages
-      $(document).ready(function() { ``
+      $(document).ready(function() {
         //remove sub div elements and then reappend them
         MessagesView.$chats.empty();//<<= always removes previous messages,losing css abilities
         MessagesView.$chats.prepend(html);
-      });   
+      });
     });
-    //problem-need to be fixed possibly in the future: 
+    //problem-need to be fixed possibly in the future:
     //friends get unfriended on refresh :(
-      //it needs to hold the sttribute after 
+    //it needs to hold the sttribute after
     setTimeout(() => {
       RoomsView.selectRoom();
     }, 10000);
@@ -107,8 +107,8 @@ var RoomsView = {
       url: Parse.server,
       type: 'GET',
       data: {
-       where: {"roomname": RoomsView.selectedRoom},
-       order: '-createdAt'
+        where: {"roomname": RoomsView.selectedRoom},
+        order: '-createdAt'
       },
       contentType: 'application/json',
       success: successCB,
