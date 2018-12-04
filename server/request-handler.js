@@ -45,7 +45,7 @@ var requestHandler = function(request, response) {
   debugger;
   // console.log('Request', request);
   // console.log('parts', parts, routes);
-  console.log('Response_1: ',response);
+  console.log('Response_1: ', response);
   var route = routes[parts.pathname];
   if (route) {
   // Request and Response come from node's http module.
@@ -69,10 +69,10 @@ var requestHandler = function(request, response) {
     if (request.method === 'GET') {
       var statusCode = 200; 
       var returnData = JSON.stringify(dataObj);     
-    } else if(request.method === 'POST'){
+    } else if (request.method === 'POST') {
       var statusCode = 201;
       dataObj.results.push(request._postData);
-      var returnData = JSON.stringify({"results":[]});
+      var returnData = JSON.stringify({results: []});
     }
     // See the note below about CORS headers.
     var headers = defaultCorsHeaders;
@@ -96,9 +96,8 @@ var requestHandler = function(request, response) {
     // node to actually send all the data over to the client.
 
     response.end(returnData);
-    console.log('Response_2: ',response);
-  } 
-  else{
+    console.log('Response_2: ', response);
+  } else{
     var headers = defaultCorsHeaders;
     response.writeHead(404, headers);
     response.end('ERROR');
