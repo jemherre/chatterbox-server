@@ -45,7 +45,7 @@ var requestHandler = function(request, response) {
   debugger;
   // console.log('Request', request);
   // console.log('parts', parts, routes);
-  console.log('Response_1: ', response);
+  // console.log('Response_1: ', response);
   var route = routes[parts.pathname];
   if (route) {
   // Request and Response come from node's http module.
@@ -96,7 +96,7 @@ var requestHandler = function(request, response) {
     // node to actually send all the data over to the client.
 
     response.end(returnData);
-    console.log('Response_2: ', response);
+    console.log('Response: ', response);
   } else {
     var headers = defaultCorsHeaders;
     response.writeHead(404, headers);

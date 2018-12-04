@@ -8,8 +8,10 @@ var Parse = {
 
     $.ajax({
       url: Parse.server,
-      type: 'POST',
-      data: JSON.stringify(message),
+      // type: 'POST',
+      method: 'POST',
+      // data: JSON.stringify(message),
+      _postData: JSON.stringify(message),
       contentType: 'application/json',
       success: successCB,
       error: errorCB || function(error) {
