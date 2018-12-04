@@ -97,7 +97,7 @@ var requestHandler = function(request, response) {
 
     response.end(returnData);
     console.log('Response_2: ', response);
-  } else{
+  } else {
     var headers = defaultCorsHeaders;
     response.writeHead(404, headers);
     response.end('ERROR');
