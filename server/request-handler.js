@@ -63,16 +63,39 @@ var requestHandler = function(request, response) {
     // debugging help, but you should always be careful about leaving stray
     // console.logs in your code.
     // console.log('Serving request type ' + request.method + ' for url ' + request.url);
-    console.log('Serving request type ' + request.method + ' for url ' + request.url);
+    // console.log('Serving request type ' + request.method + ' for url ' + request.url);
+
+    //we want to verify that the request is valid
+    request.on('error', (err) => {
+      console.log('ERROR:', err)
+    });
     
     // The outgoing status.
     if (request.method === 'GET') {
       var statusCode = 200; 
-      var returnData = JSON.stringify(dataObj);     
+      var returnData = JSON.stringify(dataObj);  
+    } else if (request.method === 'OPTIONS') {
+    
+      var statusCode = 200;
+      let body = {};
+      body.Allow = defaultCorsHeaders['access-control-allow-methods'];
+      // console.log('Options!',body);
+      var returnData = JSON.stringify(body);
     } else if (request.method === 'POST') {
       var statusCode = 201;
-      dataObj.results.push(request._postData);
-      var returnData = JSON.stringify({results: []});
+      var returnData = '';
+      let body = [];
+      request.on('data', (dataIn) => {
+        body.push(dataIn);
+      });
+      request.on('end',() => {
+        body = Buffer.concat(body).toString(); //string
+        var validObj = JSON.parse(body);
+        dataObj.results.push(validObj);
+        returnData = JSON.stringify(validObj);
+        console.log('Data: ',returnData);
+      });
+       
     }
     // See the note below about CORS headers.
     var headers = defaultCorsHeaders;
@@ -96,7 +119,7 @@ var requestHandler = function(request, response) {
     // node to actually send all the data over to the client.
 
     response.end(returnData);
-    console.log('Response: ', response);
+    // console.log('Response: ', response);
   } else {
     var headers = defaultCorsHeaders;
     response.writeHead(404, headers);
