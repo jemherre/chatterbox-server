@@ -67,7 +67,7 @@ var requestHandler = function(request, response) {
 
     //we want to verify that the request is valid
     request.on('error', (err) => {
-      console.log('ERROR:', err)
+      console.log('ERROR:', err);
     });
     
     // The outgoing status.
@@ -88,12 +88,12 @@ var requestHandler = function(request, response) {
       request.on('data', (dataIn) => {
         body.push(dataIn);
       });
-      request.on('end',() => {
+      request.on('end', () => {
         body = Buffer.concat(body).toString(); //string
         var validObj = JSON.parse(body);
         dataObj.results.push(validObj);
         returnData = JSON.stringify(validObj);
-        console.log('Data: ',returnData);
+        console.log('Data: ', returnData);
       });
        
     }
